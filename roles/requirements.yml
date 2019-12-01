@@ -14,7 +14,7 @@
 #   version: master
 
 - src: https://github.com/automaticdavid/azure
-  version: master
+  version: devel
   name: azure
   
 # - src: https://github.com/automaticdavid/hc_vault_mssql_mgmt.git
