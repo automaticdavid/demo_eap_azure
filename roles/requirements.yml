@@ -13,9 +13,9 @@
 #   name: nehrman.ansible-role-f5
 #   version: master
 
-- src: https://github.com/automaticdavid/ec2
+- src: https://github.com/automaticdavid/azure
   version: master
-  name: ec2
+  name: azure
   
 # - src: https://github.com/automaticdavid/hc_vault_mssql_mgmt.git
 #   version: master

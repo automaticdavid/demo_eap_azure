@@ -6,5 +6,5 @@
   tasks:
     - name: Including ec2 role for infrastructure creation
       include_role:
-        name: ec2
-        tasks_from: ec2_env_setup.yml
+        name: azure
+        tasks_from: azure_env_setup.yml
