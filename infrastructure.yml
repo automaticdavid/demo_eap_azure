@@ -16,6 +16,7 @@
       vars:
         az_application: 'database'
         az_purpose: "{{ scope }}"
+        az_count: 1
 
     - name: Create EAP VM
       include_role:
@@ -23,8 +24,7 @@
       vars:
         az_application: 'eap'
         az_purpose: "{{ scope }}"
+        az_count: 1
 
 
-#    - name: Refresh inventory 
-#      meta: refresh_inventory
 
