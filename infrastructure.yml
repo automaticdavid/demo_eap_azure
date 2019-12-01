@@ -15,12 +15,14 @@
         name: azure
       vars:
         az_application: 'database'
+        az_purpose: "{{ scope }}"
 
     - name: Create EAP VM
       include_role:
         name: azure
       vars:
         az_application: 'eap'
+        az_purpose: "{{ scope }}"
 
 
 #    - name: Refresh inventory 
