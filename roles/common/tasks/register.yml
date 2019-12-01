@@ -1,0 +1,11 @@
+- name: Verify that Red Hat Subscription Manager is present
+  yum:
+    name: subscription-manager
+    state: present
+
+- name: Register system into RHSM
+  redhat_subscription:
+    state: present
+    username: "{{ rhsm_username }}"
+    password: "{{ rhsm_password }}"
+    force_register: True

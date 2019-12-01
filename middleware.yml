@@ -1,0 +1,232 @@
+---
+- name: Install & Configure JBoss EAP
+  hosts: tag_Role_eap:&tag_Name_{{scope}}
+  gather_facts: yes
+  become: yes
+
+  vars:
+    rhn_username: "{{ rhsm_username }}"
+    rhn_password: "{{ rhsm_password }}"
+    rh_poolid: "{{ rhpoolid }}"
+  
+  pre_tasks:
+
+    - include_vars:
+        file: vars/all.yml
+      run_once: yes
+
+    - name: Find MS-SQL IP Address 
+      set_fact:
+        sqlip: "{{ item }}"
+      with_inventory_hostnames:
+        - tag_Role_eap:&tag_Name_{{scope}}
+
+    - name: Display MS-SQL IP Address
+      debug:
+        var: sqlip
+        verbosity: 2
+
+    - name: Find EAP VMs IP addresses
+      set_fact:
+        ips: "{{ item }}"
+      with_inventory_hostnames:
+        - tag_Role_eap:&tag_Name_{{scope}}
+
+    - name: Display EAP IP Address
+      debug:
+        var: ips
+        verbosity: 2
+        
+    # - name: Return all secrets from a path
+    #   set_fact:
+    #     db_secrets: "{{ lookup('hashi_vault', 'secret=' + hc_lookup)}}"
+    #   vars: 
+    #     hc_lookup: "/database/creds/readwrite token={{ hc_vault_token }} url={{ hc_vault_server }}"
+
+    # - name: Find MS-SQL password
+    #   set_fact:
+    #     sqlpass: "{{ db_secrets.password }}"
+
+    # - name: Find MS-SQL user
+    #   set_fact:
+    #     sqluser: "{{ db_secrets.username }}"
+
+    - name: Find MS-SQL password
+      set_fact:
+        sqlpass:  "{{ hostvars.fact_store.eap_facts.db_password }}"
+
+    - name: Find MS-SQL user
+      set_fact:
+        sqluser: "{{ hostvars.fact_store.eap_facts.db_user }}"
+
+    - name: Install needed utilities packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - firewalld
+        - unzip
+
+    # - name: RHV ops
+    #   block:
+    #     - name: Install nfs client
+    #       yum: 
+    #         name: nfs-utils
+    #         state: present
+    #     - name: Create the mount directory for NFS copy of EAP sources
+    #       file:
+    #         path: /mnt/jboss
+    #         state: directory
+    #         mode: 0755
+    #     - name: Mount Source folder
+    #       mount:
+    #         path: /mnt/jboss
+    #         src: "{{ jboss_source_share }}"
+    #         fstype: nfs
+    #         state: mounted
+    #   when: infra == 'rhv'
+
+    - name: AWS ops
+      block:
+        # - file:
+        #     path: /tmp/jboss
+        #     state: directory
+        #     mode: 0755
+        - name: Get JBOSS source
+          get_url:
+            url : "{{ s3_eap }}"
+            dest: /tmp/
+        - name: Get JDBC driver 
+          get_url:
+            url :  "{{ s3_jdbc }}"
+            dest: /tmp/         
+      when: infra == 'aws'
+
+
+
+  roles:
+
+    - jboss_common
+    - jboss_eap
+
+
+  tasks:
+
+    - name: Configure firewalld 
+      service:
+        name: firewalld
+        state: stopped
+        enabled: yes
+
+    # - name: Open TCP port for EAP
+    #   firewalld:
+    #     port: 8080/tcp
+    #     state: enabled 
+
+    - name: Stop JBOSS
+      service: 
+        name: jboss-standalone
+        state: stopped
+
+    - name: Create jdbc folder
+      file:
+        path: /opt/jboss-as/jboss-eap-7.1/modules/com/microsoft/main/
+        state: directory
+        mode: 0775
+        recurse: yes
+        owner: jboss-as
+        group: jboss_as
+
+    - name: Create download temp folder
+      file:
+        path: /tmp/sqldriver
+        state: directory
+        mode: 0660
+
+    - name: Get MS SQL jdbc driver
+      unarchive:
+        src: /tmp/sqljdbc_7.0.0.0_enu.tar.gz
+        dest: /tmp/sqldriver
+        remote_src: yes
+
+    - name: Copy Driver to modules
+      copy:
+        src: /tmp/sqldriver/sqljdbc_7.0/enu/mssql-jdbc-7.0.0.jre8.jar
+        dest: /opt/jboss-as/jboss-eap-7.1/modules/com/microsoft/main/mssql-jdbc-7.0.0.jre8.jar
+        remote_src: yes
+        owner: jboss-as
+        group: jboss_as
+        mode: 0664
+
+    - name: Clean up download
+      file: 
+        name: /tmp/sqldriver
+        state: absent 
+
+    - name: Create the module.xml file
+      copy:
+        src: files/module.xml
+        dest: /opt/jboss-as/jboss-eap-7.1/modules/com/microsoft/main/module.xml
+        owner: jboss-as
+        group: jboss_as
+        mode: 0664
+
+    - name: Customize the EAP standalone file 
+      template:
+        src: "templates/{{ jboss_eap_default_config }}.j2"
+        dest: "/opt/jboss-as/jboss-eap-7.1/standalone/configuration/{{ jboss_eap_default_config }}"
+        owner: jboss-as
+        group: jboss_as
+        mode: 0664
+
+    - name: Start JBOSS
+      service:
+        name: jboss-standalone
+        state: started
+
+    - name: Get WAR
+      get_url:
+        url: "{{ artifact }}"
+        dest: /tmp/coolstore.war
+        force: yes
+        #url_password: "{{ jfrog_pass }}"
+        #url_username: "{{ jfrog_user }}"
+
+    - name: Install WAR
+      jboss:
+        deploy_path: "{{ deploy_path }}"
+        src: /tmp/coolstore.war
+        deployment: ROOT.war
+        state: present
+      ignore_errors: yes
+
+    # - name: Unmount Source folder
+    #   mount:
+    #     path: /mnt/jboss
+    #     state: absent
+    #   when: infra == 'rhv'
+
+
+# - name: LB actions
+#   hosts: "{{ scope }}"
+#   connection: local
+
+#   tasks:
+
+#     - name: Ensure Nodes are present in F5 Load Balancer
+#       vars:
+#         bigip_node_port: "8080"
+#         bigip_node_ip: "{{ ansible_host }}"
+#       include_role:
+#         name: nehrman.ansible-role-f5
+#         tasks_from: add_apps_to_f5.yml
+#       when: jboss_eap_ha
+
+
+
+
+
+
+
+
+
