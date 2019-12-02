@@ -17,6 +17,7 @@
         az_application: 'database'
         az_purpose: "{{ scope }}"
         az_count: 1
+        az_scope: 'database'
 
     - name: Create EAP VM
       include_role:
@@ -25,6 +26,7 @@
         az_application: 'eap'
         az_purpose: "{{ scope }}"
         az_count: 1
+        az_scope: 'eap'
 
 
 
