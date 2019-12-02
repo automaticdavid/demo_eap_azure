@@ -1,6 +1,6 @@
 ---
 - name: Install & Configure JBoss EAP
-  hosts: database
+  hosts: application_eap
   gather_facts: yes
   become: yes
 
@@ -19,7 +19,7 @@
       set_fact:
         sqlip: "{{ item }}"
       with_inventory_hostnames:
-        - database
+        - application_database
 
     - name: Display MS-SQL IP Address
       debug:
@@ -30,7 +30,7 @@
       set_fact:
         ips: "{{ item }}"
       with_inventory_hostnames:
-        - eap
+        - application_eap
 
     - name: Display EAP IP Address
       debug:

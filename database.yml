@@ -1,6 +1,6 @@
 ---
 - name: Install & Configure MS-SQL
-  hosts: database
+  hosts: application_database
   become: True
   gather_facts: yes
 
