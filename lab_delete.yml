@@ -6,12 +6,12 @@
 
   tasks:
   
-    - name: Include role tasks to delete ec2 instances
+    - name: Include role tasks to delete azure instances
       include_role: 
         name: azure
         tasks_from: azure_delete
 
-    - name: Include role tasks to delete ec2 Lab
+    - name: Include role tasks to delete azure Lab
       include_role: 
         name: azure
         tasks_from: azure_env_destroy
