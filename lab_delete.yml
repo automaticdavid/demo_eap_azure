@@ -1,5 +1,5 @@
 ---
-- name: Delete ec2 infra of a given scope
+- name: Delete azure infra of a given scope
   hosts: localhost
   connection: local
   gather_facts: no
