@@ -100,7 +100,7 @@
           get_url:
             url :  "{{ s3_jdbc }}"
             dest: /tmp/         
-      when: infra == 'aws'
+      when: infra == 'aws' or infra == 'azure'
 
 
 
