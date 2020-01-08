@@ -84,7 +84,7 @@
       
     - name: Generate SA password
       set_fact:
-        sql_sa_password: "{{ lookup('password', '/dev/null') }}"
+        sql_sa_password: "{{ lookup('password', '/dev/null chars=ascii_letters,digits,hexdigits') }}"
       no_log: True
 
     - name: Check MS-SQL Configuration
