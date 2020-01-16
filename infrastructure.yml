@@ -18,6 +18,7 @@
         az_purpose: "{{ scope }}"
         az_count: 1
         az_scope: 'database'
+        az_loadbalanced: no
 
     - name: Create EAP VM
       include_role:
@@ -27,6 +28,7 @@
         az_purpose: "{{ scope }}"
         az_count: 1
         az_scope: 'eap'
+        az_loadbalanced: yes
 
 
 
