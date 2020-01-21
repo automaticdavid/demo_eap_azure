@@ -1,6 +1,6 @@
 
 - src: https://github.com/automaticdavid/azure
-  version: master
+  version: devel
   name: azure
   
 - src: https://github.com/automaticdavid/eap
