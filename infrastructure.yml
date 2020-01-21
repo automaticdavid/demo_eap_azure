@@ -5,7 +5,7 @@
 
   tasks:
 
-    - name: Including azure role for lab creation
+    - name: Including azure role for ressource group creation
       include_role:
         name: azure
         tasks_from: azure_env_setup
