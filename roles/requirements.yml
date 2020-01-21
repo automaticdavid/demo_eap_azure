@@ -1,22 +1,12 @@
 
-# - src: redhat-cop.jboss-common
-#   name: redhat-cop.jboss_common
-
-# - src: redhat-cop.jboss_eap
-#   name: redhat-cop.jboss_eap
-
-- src: sabre1041.redhat-csp-download
-  name: sabre1041.redhat-csp-download
-
-# - src: https://github.com/nehrman/ansible-role-f5.git
-#   scm: git
-#   name: nehrman.ansible-role-f5
-#   version: master
-
 - src: https://github.com/automaticdavid/azure
-  version: devel
+  version: master
   name: azure
   
+- src: https://github.com/automaticdavid/eap
+  version: master
+  name: eap
+
 # - src: https://github.com/automaticdavid/hc_vault_mssql_mgmt.git
 #   version: master
 #   name: hc_mssql
