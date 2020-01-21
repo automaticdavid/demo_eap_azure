@@ -1,6 +1,6 @@
 ---
 - name: Install & Configure JBoss EAP
-  hosts: eap
+  hosts: eap:&{{scope}}
   gather_facts: yes
   become: yes
 
