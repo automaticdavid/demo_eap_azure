@@ -14,7 +14,7 @@
 
     - name: Including EAP role 
       include_role:
-        name: eap-mssql
+        name: eap_mssql
       vars:
         db_name: monolith
         db_creation_date: "{{ ansible_date_time.date }}"
