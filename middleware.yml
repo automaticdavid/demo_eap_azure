@@ -15,6 +15,7 @@
       include_role:
         name: eap
       vars:
+        install_java: yes
         eap_tags_for_database: "database:&{{scope}}"
         eap_tags_for_eap: "eap:&{{scope}}"
 
