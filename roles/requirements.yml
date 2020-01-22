@@ -3,6 +3,10 @@
   version: devel
   name: azure
   
+- src: https://github.com/automaticdavid/eap-mssql
+  version: master
+  name: eap-mssql
+
 - src: https://github.com/automaticdavid/eap
   version: master
   name: eap

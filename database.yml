@@ -14,10 +14,8 @@
 
     - name: Including EAP role 
       include_role:
-        name: eap
+        name: eap-mssql
       vars:
-        eap_tags_for_database: "database:&{{scope}}"
-        eap_tags_for_eap: "eap:&{{scope}}"
         db_name: monolith
         db_creation_date: "{{ ansible_date_time.date }}"
         db_project: "project_{{scope}}"
