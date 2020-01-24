@@ -7,7 +7,7 @@
 
     - name: Select VM size
       set_fact:
-        az_actual_size: "{{ tee_shirt_sizes[infra_size] }}"
+        az_size: "{{ tee_shirt_sizes[infra_size] }}"
       vars:
         tee_shirt_sizes: 
           dev: Standard_B2ms
@@ -25,7 +25,6 @@
       vars:
         az_application: 'database'
         az_purpose: "{{ scope }}"
-        az_size: "{{ az_actual_size }}"
         az_count: 1
         az_scope: 'database'
         az_loadbalanced: no
@@ -36,7 +35,6 @@
       vars:
         az_application: 'eap'
         az_purpose: "{{ scope }}"
-        az_size: "{{ az_actual_size }}"
         az_count: 1
         az_scope: 'eap'
         az_loadbalanced: yes

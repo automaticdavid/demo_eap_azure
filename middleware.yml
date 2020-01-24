@@ -10,6 +10,10 @@
     rh_poolid: "{{ rhpoolid }}"
 
   tasks:
+  
+    - name: Select Artifact 
+      set_fact:
+        artifact: "{{ artifact_store | regex_replace('/$','') }}/{{ war_name }}-{{ version }}.war"
 
     - name: Including EAP role 
       include_role:
