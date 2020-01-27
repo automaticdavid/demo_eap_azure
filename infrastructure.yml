@@ -10,9 +10,9 @@
         az_size: "{{ tee_shirt_sizes[infra_size] }}"
       vars:
         tee_shirt_sizes: 
-          dev: Standard_B2ms
-          prod: Standard_B4ms
-          perf: Standard_B8ms
+          dev: Standard_B4ms
+          prod: Standard_B8ms
+          perf: Standard_B16ms
 
     - name: Including azure role for ressource group creation
       include_role:
