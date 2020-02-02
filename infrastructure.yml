@@ -35,7 +35,7 @@
       vars:
         az_application: 'eap'
         az_purpose: "{{ scope }}"
-        az_count: 1
+        az_count: "{{ eap_az_count }}"
         az_scope: 'eap'
         az_loadbalanced: yes
 
