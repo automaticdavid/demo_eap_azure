@@ -27,7 +27,7 @@
         az_purpose: "{{ scope }}"
         az_count: 1
         az_scope: 'database'
-        az_size: "{{ az_actual_size }}"
+        az_vm_size: "{{ az_actual_size }}"
         az_loadbalanced: no
 
     - name: Create EAP VM
@@ -38,7 +38,7 @@
         az_purpose: "{{ scope }}"
         az_count: "{{ eap_az_count }}"
         az_scope: 'eap'
-        az_size: "{{ az_actual_size }}"
+        az_vm_size: "{{ az_actual_size }}"
         az_loadbalanced: yes
 
 
