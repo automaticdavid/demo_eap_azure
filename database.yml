@@ -12,7 +12,7 @@
 
   tasks:
 
-    - name: Including EAP role 
+    - name: Including EAP role for MSQL config
       include_role:
         name: eap_mssql
       vars:
